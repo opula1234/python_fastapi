@@ -41,3 +41,8 @@ def welcome_message():
 @app.get("/welcome_user")
 def greet_user():
     return {"Msg": "Thanks for coming"}
+
+
+@app.get("/get_info")
+def show_information():
+    return {"msg": "Please check the latest version"}
