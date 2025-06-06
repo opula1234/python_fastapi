@@ -11,10 +11,11 @@ This module creates a simple FastAPI application with two endpoints:
 - GET /welcome: Returns a welcome message.
 """
 
+
 @app.get(
-    "/", 
-    tags=["Root"], 
-    summary="Root endpoint", 
+    "/",
+    tags=["Root"],
+    summary="Root endpoint",
     description="Returns a message directing users to the documentation page."
 )
 def initial_root():
@@ -25,9 +26,9 @@ def initial_root():
 
 
 @app.get(
-    "/welcome", 
-    tags=["Welcome"], 
-    summary="Welcome endpoint", 
+    "/welcome",
+    tags=["Welcome"],
+    summary="Welcome endpoint",
     description="Returns a welcome message."
 )
 def welcome_message():
@@ -35,3 +36,8 @@ def welcome_message():
     Welcome endpoint that returns a welcome message.
     """
     return {"msg": "Welcome to FastAPI"}
+
+
+@app.get("/welcome_user")
+def greet_user():
+    return {"Msg": "Thanks for coming"}
