@@ -3,34 +3,33 @@ name: Deploy FastAPI to EC2
 on:
   push:
     branches:
-      - main
+      - main  # or master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v3
 
-      - name: Copy files to EC2
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "."
-          target: "/home/ubuntu/app"
+    - name: Copy files to EC2 using SSH
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        source: "."
+        target: "/home/ubuntu/python_fastapi"
 
-      - name: Run Docker on EC2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /home/ubuntu/app
-            docker stop fastapi_app || true
-            docker rm fastapi_app || true
-            docker build -t fastapi_app .
-            docker run -d -p 80:80 --name fastapi_app fastapi_app
+    - name: SSH and Restart Uvicorn Service
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          cd /home/ubuntu/python_fastapi
+          source venv/bin/activate
+          pip install -r requirements.txt
+          sudo systemctl restart fastapi
