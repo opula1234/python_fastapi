@@ -32,4 +32,4 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/firstapi-app
           docker stop fastapi-container || true
           docker rm fastapi-container || true
-          docker run -d --name fastapi-container -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/firstapi-app
+          docker run -d --name fastapi-container -p 8080:8000 ${{ secrets.DOCKER_USERNAME }}/firstapi-app
